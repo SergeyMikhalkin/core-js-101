@@ -151,8 +151,9 @@ function doRectanglesOverlap(/* rect1, rect2 */) {
  *   { center: { x:0, y:0 }, radius:10 },  { x:10, y:10 }   => false
  *
  */
-function isInsideCircle(/* circle, point */) {
-  throw new Error('Not implemented');
+function isInsideCircle(circle, point) {
+  return Math.sqrt((point.x - circle.center.x) ** 2 + (point.y - circle.center.y) ** 2)
+  < circle.radius;
 }
 
 /**
@@ -168,8 +169,18 @@ Sergei M, [26-Jul-22 02:52]
  *   'abracadabra'  => 'c'
  *   'entente' => null
  */
-function findFirstSingleChar(/* str */) {
-  throw new Error('Not implemented');
+function findFirstSingleChar(str) {
+  let char = null;
+  const cache = {};
+  for (let i = 0; i < str.length - 1; i += 1) {
+    if (str.substring(i + 1).includes(str[i]) === false && !cache[str[i]]) {
+      char = str[i];
+      break;
+    }
+    cache[str[i]] = 'exist';
+  }
+
+  return char;
 }
 
 /**
@@ -426,8 +437,49 @@ function getMatrixProduct(/* m1, m2 */) {
  *    [    ,   ,    ]]
  *
  */
-function evaluateTicTacToePosition(/* position */) {
-  throw new Error('Not implemented');
+function evaluateTicTacToePosition(position) {
+  let count = 0;
+
+  for (let i = 0; i < 3; i += 1) {
+    count = 0;
+    if (position[i][0] !== undefined) count = 1;
+
+    for (let j = 1; j < 3; j += 1) {
+      if (position[i][j] === position[i][j - 1]) count += 1;
+      else break;
+    }
+
+    if (count === 3) return position[i][2];
+  }
+
+  for (let j = 0; j < 3; j += 1) {
+    count = 0;
+    if (position[0][j] !== undefined) count = 1;
+
+    for (let i = 1; i < 3; i += 1) {
+      if (position[i][j] === position[i - 1][j]) count += 1;
+      else break;
+    }
+    if (count === 3) return position[2][j];
+  }
+
+  if (position[0][0] !== undefined) {
+    count = 1;
+    for (let i = 1; i < 3; i += 1) {
+      if (position[i][i] === position[i - 1][i - 1]) count += 1;
+    }
+    if (count === 3) return position[0][0];
+  }
+
+  if (position[0][2] !== undefined) {
+    count = 1;
+    for (let i = 1; i >= 0; i -= 1) {
+      if (position[2 - i][i] === position[1 - i][i + 1]) count += 1;
+    }
+    if (count === 3) return position[0][2];
+  }
+
+  return undefined;
 }
 
 module.exports = {
